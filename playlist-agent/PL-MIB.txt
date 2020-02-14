@@ -1,0 +1,99 @@
+PL-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Top-level infrastructure of the Net-SNMP project enterprise MIB tree
+--
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE,
+    enterprises, Counter32, Integer32, mib-2
+        FROM SNMPv2-SMI
+    DisplayString, TestAndIncr, TimeStamp
+
+        FROM SNMPv2-TC
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+        FROM SNMPv2-CONF;
+
+
+playlist OBJECT-GROUP
+        OBJECTS {
+            playedMusic, 
+            playListTable
+        }
+        STATUS current
+        DESCRIPTION
+            "The Host playlist Group."
+        ::=  { enterprises 1}
+
+playedMusic OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "The name of the playing music."
+    ::= { playlist 1 }
+
+
+-- The Play List table contains information on the entity's
+
+playListTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF PlEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "A list of musics entries.  The number of entries is
+            given by the value of plMusicNumber."
+    ::= { playlist 2 }
+
+plEntry OBJECT-TYPE
+    SYNTAX      PlEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "An entry containing information about a
+            particular music."
+    INDEX   { plIndex }
+    ::= { plTable 1 }
+
+PlEntry ::=
+    SEQUENCE {
+        plIndex                 INTEGER,
+        plArtist                DisplayString,
+        plType                  DisplayString,
+        plTitle                 DisplayString
+    }
+
+plIndex OBJECT-TYPE
+    SYNTAX      INTEGER (1..2147483647) 
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "A unique value, greater than zero, for each music.  It
+            is recommended that values are assigned contiguously
+            starting from 1."
+    ::= { plEntry 1 }
+
+plArtist OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE (0..255))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "A textual string containing the music artist name."
+    ::= { plEntry 2 }
+
+plType OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE (0..255))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "A textual string containing the music type."
+    ::= { plEntry 3 }
+
+plTitle OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE (0..255))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "A textual string containing the music title."
+    ::= { plEntry 4 }
+END

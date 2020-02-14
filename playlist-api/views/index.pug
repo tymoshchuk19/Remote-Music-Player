@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .container
+        h1.text-center.display-3 Lista de processos no dispositivo
+
+        div.row
+            div.col(id="chartContainer0" style="height: 360px;")
+            div.col(id="chartContainer1" style="height: 360px;")
+        
+        div.dropdown
+            button.btn.btn-dark.dropdown-toggle(type="button" data-toggle="dropdown") Hosts
+            div.dropdown-menu
+                each h in hosts
+                    a.dropdown-item(href="http://localhost:3000/" + h.ip)= h.ip
+
+        table.table
+            tr.thead-dark
+                th Identificador
+                th Nome
+                th Path
+            each p in list
+                tr
+                    td= p.index
+                    td= p.nome
+                    td= p.path
+
